@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #0048ff;
+            color: white;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 18px;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        input {
+            background-color: #fff;
+            color: #333;
+        }
+        button {
+            background-color: #ff4757;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #e84118;
+        }
+        #counter {
+            font-size: 28px;
+            margin-top: 20px;
+            font-weight: bold;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            border: 5px solid #0048ff;
+        }
+        .num {
+            color: #0048ff;
+            font-weight: bold;
+            font-size: 40px;
+        }
+        .date_type {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 40px;
+        }
+        .time-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Countdown Timer</h1>
+    <label for="birthday">Enter your <span class="date_type">birthday</span>:</label>
+    <input type="date" id="birthday">
+    <button onclick="startCounter()">Start</button>
+    
+    <div id="counter"></div>
+
+    <script>
+        function startCounter() {
+            let birthday = document.getElementById("birthday").value;
+            if (!birthday) {
+                alert("Please enter your birthday.");
+                return;
+            }
+            let birthDate = new Date(birthday);
+
+            function updateCounter() {
+                let now = new Date();
+                let diff = now - birthDate;
+                let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                let hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+                let minutes = Math.floor(diff / (1000 * 60)) % 60;
+                let seconds = Math.floor(diff / 1000) % 60;
+
+                document.getElementById("counter").innerHTML = `
+                    <div class="time-container">
+                        <p><span class="num">${days}</span> <span class="date_type">days</span></p>
+                        <p><span class="num">${hours}</span> <span class="date_type">hours</span></p>
+                        <p><span class="num">${minutes}</span> <span class="date_type">minutes</span></p>
+                        <p><span class="num">${seconds}</span> <span class="date_type">seconds</span></p>
+                    </div>
+                    <br>
+                    <p><span class="num">${days}</span> days, <span class="num">${hours}</span> hour, <span class="num">${minutes}</span> minutes, <span class="num">${seconds}</span> seconds</p>
+                `;
+            }
+            
+            setInterval(updateCounter, 1000);
+            updateCounter();
+        }
+    </script>
+</body>
+</html>

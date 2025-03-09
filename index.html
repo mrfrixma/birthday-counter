@@ -3,110 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Timer</title>
+    <title>Birthday Counter</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            margin: 50px;
             background-color: #0048ff;
+            font-family: Arial, sans-serif;
+            text-align: center;
             color: white;
         }
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-        label {
-            font-size: 18px;
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-        }
-        input {
-            background-color: #fff;
-            color: #333;
-        }
-        button {
-            background-color: #ff4757;
-            color: white;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background-color: #e84118;
-        }
-        #counter {
-            font-size: 28px;
-            margin-top: 20px;
-            font-weight: bold;
-            background: white;
+        .container {
+            background-color: white;
+            width: 50%;
+            margin: 50px auto;
             padding: 20px;
             border-radius: 10px;
-            display: inline-block;
-            border: 5px solid #0048ff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
-        .num {
-            color: #0048ff;
-            font-weight: bold;
-            font-size: 40px;
-        }
-        .date_type {
-            color: #ff0000;
-            font-weight: bold;
-            font-size: 40px;
-        }
-        .time-container {
+        .countdown {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .countdown div {
+            margin: 10px 0;
+        }
+        .number {
+            color: #0048ff;
+        }
+        .date-type {
+            color: #ff0000;
+        }
+        .input-section {
+            margin-top: 20px;
+        }
+        .input-section label {
+            font-size: 18px;
+            color: #ff0000;
+        }
+        #datetime {
+            padding: 5px;
+            font-size: 16px;
+        }
+        .start-btn {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .start-btn:hover {
+            background-color: darkred;
+        }
+        .final-countdown {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: black;
+        }
+        .final-countdown .number {
+            color: #ffffff;
+        }
+        .final-countdown .date-type {
+            color: #ff0000;
         }
     </style>
 </head>
 <body>
-    <h1>Countdown Timer</h1>
-    <label for="birthday">Enter your <span class="date_type">birthday</span>:</label>
-    <input type="date" id="birthday">
-    <button onclick="startCounter()">Start</button>
-    
-    <div id="counter"></div>
+    <h1>Birthday Counter</h1>
+    <div class="container">
+        <div class="countdown" id="countdown">
+            <div><span class="number" id="months">0</span> <span class="date-type">months</span></div>
+            <div><span class="number" id="weeks">0</span> <span class="date-type">weeks</span></div>
+            <div><span class="number" id="days">0</span> <span class="date-type">days</span></div>
+            <div><span class="number" id="hours">0</span> <span class="date-type">hours</span></div>
+            <div><span class="number" id="minutes">0</span> <span class="date-type">minutes</span></div>
+            <div><span class="number" id="seconds">0</span> <span class="date-type">seconds</span></div>
+        </div>
+    </div>
+    <div class="input-section">
+        <label for="datetime">Enter your <span class="date-type">birthday</span>:</label>
+        <input type="date" id="datetime">
+        <button class="start-btn" onclick="startCountdown()">Start</button>
+    </div>
+    <div class="final-countdown" id="final-countdown"></div>
 
     <script>
-        function startCounter() {
-            let birthday = document.getElementById("birthday").value;
-            if (!birthday) {
-                alert("Please enter your birthday.");
-                return;
-            }
-            let birthDate = new Date(birthday);
 
-            function updateCounter() {
-                let now = new Date();
-                let diff = now - birthDate;
-                let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                let hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
-                let minutes = Math.floor(diff / (1000 * 60)) % 60;
-                let seconds = Math.floor(diff / 1000) % 60;
+// Cookie saqlash funksiyasi
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
 
-                document.getElementById("counter").innerHTML = `
-                    <div class="time-container">
-                        <p><span class="num">${days}</span> <span class="date_type">days</span></p>
-                        <p><span class="num">${hours}</span> <span class="date_type">hours</span></p>
-                        <p><span class="num">${minutes}</span> <span class="date_type">minutes</span></p>
-                        <p><span class="num">${seconds}</span> <span class="date_type">seconds</span></p>
-                    </div>
-                    <br>
-                    <p><span class="num">${days}</span> days, <span class="num">${hours}</span> hour, <span class="num">${minutes}</span> minutes, <span class="num">${seconds}</span> seconds</p>
-                `;
-            }
-            
-            setInterval(updateCounter, 1000);
-            updateCounter();
+// Cookie o‘qish funksiyasi
+function getCookie(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+let interval;
+
+function startCountdown() {
+    clearInterval(interval);
+    let inputDate = document.getElementById("datetime").value;
+
+    if (!inputDate) {
+        alert("Please enter a valid date!");
+        return;
+    }
+
+    // Tug‘ilgan sanani cookie va localStorage-ga saqlash
+    setCookie("birthDate", inputDate, 365);
+    localStorage.setItem("birthDate", inputDate);
+
+    calculateAge(new Date(inputDate));
+}
+
+function calculateAge(birthDate) {
+    interval = setInterval(() => {
+        let now = new Date();
+        let thisYear = now.getFullYear();
+        let birthYear = birthDate.getFullYear();
+        let age = thisYear - birthYear;
+
+        let thisYearBirthday = new Date(thisYear, birthDate.getMonth(), birthDate.getDate());
+        if (now < thisYearBirthday) {
+            age -= 1;
+            thisYearBirthday.setFullYear(thisYear - 1);
         }
+
+        let diff = now - birthDate;
+        let months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30.44));
+        let weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+        let daysTotal = Math.floor(diff / (1000 * 60 * 60 * 24));
+        let hoursTotal = Math.floor(diff / (1000 * 60 * 60));
+        let minutesTotal = Math.floor(diff / (1000 * 60));
+        let secondsTotal = Math.floor(diff / 1000);
+
+        document.getElementById("months").innerText = months;
+        document.getElementById("weeks").innerText = weeks;
+        document.getElementById("days").innerText = daysTotal;
+        document.getElementById("hours").innerText = hoursTotal;
+        document.getElementById("minutes").innerText = minutesTotal;
+        document.getElementById("seconds").innerText = secondsTotal;
+
+        let diffSinceBirthday = now - thisYearBirthday;
+        let days = Math.floor(diffSinceBirthday / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((diffSinceBirthday / (1000 * 60 * 60)) % 24);
+        let minutes = Math.floor((diffSinceBirthday / (1000 * 60)) % 60);
+        let seconds = Math.floor((diffSinceBirthday / 1000) % 60);
+
+        document.getElementById("final-countdown").innerHTML = 
+            `<span class="number">${age}</span> <span class="date-type">years</span>, 
+             <span class="number">${days}</span> <span class="date-type">days</span>, 
+             <span class="number">${hours}</span> <span class="date-type">hours</span>, 
+             <span class="number">${minutes}</span> <span class="date-type">minutes</span>, 
+             <span class="number">${seconds}</span> <span class="date-type">seconds</span>.`;
+    }, 1000);
+}
+
+// Sahifa yuklanganda cookie yoki localStorage-dan tug‘ilgan sanani yuklash
+window.onload = function() {
+    let savedDate = getCookie("birthDate") || localStorage.getItem("birthDate");
+    if (savedDate) {
+        document.getElementById("datetime").value = savedDate;
+        calculateAge(new Date(savedDate));
+    }
+};
+
+
     </script>
 </body>
 </html>
